@@ -10,15 +10,25 @@ import PropertyBoundary from "./components/Map/PropertyBoundery";
 import FilterPanel from "./components/Menu/FilterPanel";
 import { supabase } from "./supabaseClient";
 import type { Database } from "./types/supabase";
+import { useNavigate } from "react-router-dom";
 
 export type TypeRow = Database["public"]["Tables"]["types"]["Row"];
 
 function App() {
   const session = useSession();
+  const navigate = useNavigate();
   const [filters, setFilters] = useState<number[]>([]);
   const [types, setTypes] = useState<TypeRow[]>([]);
   const [showBoundary, setShowBoundary] = useState(true);
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "SIGNED_IN") navigate("/", { replace: true });
+      if (event === "SIGNED_OUT") navigate("/login", { replace: true });
+    });
+    return () => sub?.subscription.unsubscribe();
+  }, [navigate]);
 
   useEffect(() => {
     const fetchTypes = async () => {

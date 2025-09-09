@@ -6,19 +6,18 @@ export default function Navbar() {
   const supabase = useSupabaseClient();
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.reload(); // reload to reset state
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error(error);
+      alert("Logout failed: " + error.message);
+    }
   };
 
   return (
     <nav className="w-full bg-white border-b shadow-sm px-4 py-3 flex items-center justify-between">
       {/* Left: Logo + App Name */}
       <div className="flex items-center gap-2">
-        <img
-          src="/logo.png"
-          alt="Logo"
-          className="h-32 w-32"
-        />
+        <img src="/logo.png" alt="Logo" className="h-32 w-32" />
         <span className="text-xl font-semibold text-gray-800 hidden sm:block">
           Crow's Peak Equipment Map
         </span>
@@ -37,7 +36,9 @@ export default function Navbar() {
           onClick={handleLogout}
           className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-md text-md font-medium cursor-pointer"
         >
-          <span className="flex place-items-center">Logout <IconMap.LogOut className="ml-2 h-5 w-5"/></span>
+          <span className="flex place-items-center">
+            Logout <IconMap.LogOut className="ml-2 h-5 w-5" />
+          </span>
         </button>
       </div>
     </nav>

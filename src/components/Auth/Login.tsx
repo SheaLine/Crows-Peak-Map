@@ -2,11 +2,16 @@ import { useState } from "react";
 import { supabase } from "../../supabaseClient";
 import InputField from "./InputField";
 import SubmitButton from "./SubmitButton";
+import { Navigate } from "react-router-dom";
+import { useSession } from '@supabase/auth-helpers-react';
 
 function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState("");
+  const session = useSession();
+
+  if (session) return <Navigate to="/" replace />;
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
