@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+
+.leaflet-interactive:focus {
+  outline: none;
+}
+
+.leaflet-div-icon.custom-marker { 
+  background: white; 
+  border: none; 
+}
+.marker-inner { 
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: black;
+  border-radius: 110px;
+}
