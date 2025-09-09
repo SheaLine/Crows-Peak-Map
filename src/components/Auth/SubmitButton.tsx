@@ -10,7 +10,7 @@ function SubmitButton({ onSubmit, text }: SubmitButtonProps) {
     <div>
       <button
         type="button"
-        className="flex w-full justify-center rounded-md bg-indigo-600 px-5 py-4 text-xl font-semibold text-white shadow-lg dark:text-[#371F0E] hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-[#F0DFBD] dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500 cursor-pointer"
+        className="flex w-full justify-center rounded-md bg-indigo-600 px-4 py-3 text-xl font-semibold text-white shadow-md dark:text-[#371F0E] hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-[#F0DFBD] dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500 cursor-pointer"
         onClick={onSubmit}
       >
         {text}

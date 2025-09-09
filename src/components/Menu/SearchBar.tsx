@@ -28,7 +28,7 @@ export default function SearchBar({
   return (
     <div className="relative">
       <span className="absolute inset-y-0 left-3 flex items-center">
-        <IconMap.Search className="h-4 w-4 text-white" />
+        <IconMap.Search className="h-4 w-4 text-gray-800 dark:text-white" />
       </span>
       <input
         value={local}
@@ -44,7 +44,7 @@ export default function SearchBar({
           className="absolute inset-y-0 right-2 flex items-center text-white hover:text-gray-600"
           aria-label="Clear"
         >
-          <IconMap.X className="h-4 w-4 text-white" />
+          <IconMap.X className="h-4 w-4 text-gray-800 dark:text-white" />
         </button>
       )}
     </div>
