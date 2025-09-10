@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Marker, Tooltip } from "react-leaflet";
+import { Marker, Tooltip, Popup } from "react-leaflet";
 import { supabase } from "../../supabaseClient";
 import type { Database } from "../../types/supabase";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +38,23 @@ export default function EquipmentLayer({
   const iconCacheRef = useRef(new Map<string, L.DivIcon>());
   const ICON_SIZE = 30;
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  // check if device is a mobile device
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+
+    // Desktop threshold: 1024px (Tailwind lg)
+    const mq = window.matchMedia("(max-width: 1023.98px)");
+    const update = () => setIsMobile(mq.matches);
+
+    update(); // set initial value
+    if (mq.addEventListener) {
+      mq.addEventListener("change", update);
+      return () => mq.removeEventListener("change", update);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchEquipment = async () => {
       const { data, error } = await supabase.from("equipment").select("*");
@@ -53,9 +70,11 @@ export default function EquipmentLayer({
 
   const term = search.trim().toLowerCase();
 
-   const filteredEquipment = equipment
+  const filteredEquipment = equipment
     .filter((eq) => (filters.length ? filters.includes(eq.type_id) : equipment))
-    .filter((eq) => (term ? (eq.name ?? "").toLowerCase().startsWith(term) : equipment));
+    .filter((eq) =>
+      term ? (eq.name ?? "").toLowerCase().startsWith(term) : equipment
+    );
 
   // changes react icon component to leaflet div icon
   // with caching to avoid re-rendering the same icon multiple times
@@ -84,7 +103,7 @@ export default function EquipmentLayer({
 
   // Don’t render markers until we have a type map
   if (!typeMap || Object.keys(typeMap).length === 0) return null;
-
+  console.log(isMobile);
   return (
     <>
       {filteredEquipment.map((eq) => {
@@ -97,30 +116,49 @@ export default function EquipmentLayer({
         const leafletIcon = getDivIcon(IconCmp, color);
         // console.log("Leaflet icon:", leafletIcon);
         return (
-        <Marker
-          key={eq.id}
-          position={[eq.lat, eq.lng]}
-          icon={leafletIcon}
-          eventHandlers={{
-            click: () => {
-              // TODO: Navigate to equipment detail page
-              navigate(``);
-            },
-          }}
-        >
-          <Tooltip
-            direction="top"
-            offset={[5, -30]}
-            opacity={1}
-            permanent={false}
+          <Marker
+            key={eq.id}
+            position={[eq.lat, eq.lng]}
+            icon={leafletIcon}
+            eventHandlers={{
+              click: () => {
+                if (!isMobile) navigate(`/equipment/${eq.id}`);
+              },
+            }}
           >
-            <div className="text-base sm:text-lg lg:text-xl p-3 max-w-[80vw]">
-              <h3 className="font-bold">{eq.name}</h3>
-              <p>Type: {type?.displayName ?? "Unknown"}</p>
-              {eq.description && <p>{eq.description}</p>}
-            </div>
-          </Tooltip>
-        </Marker>
+            {isMobile ? (
+              <Popup autoPan closeButton offset={[5, 0]}>
+                <div className="text-sm md:text-lg lg:text-xl p-0 max-w-[80vw] m-0">
+                  <h3 className="font-bold">{eq.name}</h3>
+                  <p>Type: {type?.displayName ?? "Unknown"}</p>
+                  {eq.description && <p>{eq.description}</p>}
+                  <button
+                    className="mt-2 rounded-xl px-3 py-2 border text-sm font-medium hover:bg-gray-100 active:scale-[.99]"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      navigate(`/equipment/${eq.id}`);
+                    }}
+                  >
+                    View details
+                  </button>
+                </div>
+              </Popup>
+            ) : (
+              <Tooltip
+                direction="top"
+                offset={[5, -30]}
+                opacity={1}
+                permanent={false}
+              >
+                <div className="text-base sm:text-lg lg:text-xl p-3 max-w-[80vw]">
+                  <h3 className="font-bold">{eq.name}</h3>
+                  <p>Type: {type?.displayName ?? "Unknown"}</p>
+                  {eq.description && <p>{eq.description}</p>}
+                </div>
+              </Tooltip>
+            )}
+          </Marker>
         );
       })}
     </>

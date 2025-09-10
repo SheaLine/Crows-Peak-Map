@@ -44,6 +44,13 @@ export type Database = {
             referencedRelation: "equipment"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "attachments_equipment_id_fkey"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_details"
+            referencedColumns: ["id"]
+          },
         ]
       }
       equipment: {
@@ -117,6 +124,13 @@ export type Database = {
             referencedRelation: "equipment"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "inspection_logs_equipment_id_fkey"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_details"
+            referencedColumns: ["id"]
+          },
         ]
       }
       line_equipment: {
@@ -138,6 +152,13 @@ export type Database = {
             columns: ["equipment_id"]
             isOneToOne: false
             referencedRelation: "equipment"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "line_equipment_equipment_id_fkey"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_details"
             referencedColumns: ["id"]
           },
           {
@@ -234,7 +255,30 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      equipment_details: {
+        Row: {
+          attachments: Json | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          inspections: Json | null
+          lat: number | null
+          lines: Json | null
+          lng: number | null
+          metadata: Json | null
+          name: string | null
+          type_id: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "equipment_type_id_fkey"
+            columns: ["type_id"]
+            isOneToOne: false
+            referencedRelation: "types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
