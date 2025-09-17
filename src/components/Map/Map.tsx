@@ -3,6 +3,7 @@ import type { LatLngExpression } from "leaflet";
 import ranchBoundary from "../../data/MapScrollBoundary.json";
 import * as turf from "@turf/turf";
 import type { FeatureCollection, Polygon } from "geojson";
+import SonomaImagery from "./SonomaImagery";
 
 interface MapProps {
   children?: React.ReactNode;
@@ -29,15 +30,16 @@ function map({ children }: MapProps) {
       minZoom={16}
       className="flex-1"
     >
-      <TileLayer
+      {/* <TileLayer
         url={`https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/{z}/{x}/{y}?access_token=${
           import.meta.env.VITE_MAPBOX_TOKEN
         }`}
         tileSize={512}
         zoomOffset={-1}
         maxZoom={22}
-      />
-        {children}
+      /> */}
+      <SonomaImagery />
+      {children}
     </MapContainer>
   );
 }
