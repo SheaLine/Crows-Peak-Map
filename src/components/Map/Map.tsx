@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer} from "react-leaflet";
 import type { LatLngExpression } from "leaflet";
 import ranchBoundary from "../../data/MapScrollBoundary.json";
 import * as turf from "@turf/turf";
