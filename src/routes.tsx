@@ -6,7 +6,6 @@ import App from "./App";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import ResetPassword from "./components/Auth/ResetPassword";
 import EquipmentDetails from "./components/Details/EquipmentDetails";
-import GeoJsonEditor from "./DevTools/Editor/GeoJsonEditor";
 
 
 export const router = createBrowserRouter([
@@ -17,5 +16,4 @@ export const router = createBrowserRouter([
   {path: "/password-forgot", element: <ForgotPassword />},
   {path: "/password-reset", element: <ResetPassword />},
   {path: "/equipment/:id", element: <EquipmentDetails />},
-  {path: "/editor", element: <GeoJsonEditor />},
 ]);
