@@ -3,12 +3,21 @@ import { Polyline, Tooltip } from "react-leaflet";
 import { supabase } from "../../supabaseClient";
 import type { Database } from "../../types/supabase";
 
+
+type LineMetadata = {
+  diameter?: string | null;
+  material?: string | null;
+  // add more keys as needed
+  [k: string]: unknown; // keep it extensible
+};
+
 // The database for lines has a "coordinates" field stored as jsonb
 // which contains an array of [lng, lat] pairs (GeoJSON format).
 // We need to override the type to reflect this.
 type LineRaw = Database["public"]["Tables"]["lines"]["Row"];
-export interface Line extends Omit<LineRaw, "coordinates"> {
+export interface Line extends Omit<LineRaw, "coordinates" | "metadata"> {
   coordinates: number[][]; // override jsonb → number[][]
+  metadata: LineMetadata | null;
 }
 
 interface LineLayerProps {
@@ -53,8 +62,9 @@ export default function LineLayer({ filters, typeMap, search }: LineLayerProps) 
             <Tooltip sticky>
               <div className="text-base sm:text-lg lg:text-xl p-3 max-w-[80vw]">
                 <h3 className="font-bold">{line.name}</h3>
-                <p>Type: {typeMap[line.type_id]?.displayName}</p>
-                {line.description && <p>{line.description}</p>}
+                
+                <p>Material: <u>{line.metadata?.material ?? "N/A"}</u></p>
+                <p>Diameter: <u>{line.metadata?.diameter ?? "N/A"}</u></p>
               </div>
             </Tooltip>
           </Polyline>

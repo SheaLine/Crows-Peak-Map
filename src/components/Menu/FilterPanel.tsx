@@ -10,6 +10,8 @@ type FilterPanelProps = {
   types: TypeRow[];
   showBoundary: boolean;
   setShowBoundary: (show: boolean) => void;
+  showBuildings: boolean;
+  setShowBuildings: (show: boolean) => void;
   search: string;
   setSearch: (s: string) => void;
 };
@@ -20,6 +22,8 @@ export default function FilterPanel({
   types,
   showBoundary,
   setShowBoundary,
+  showBuildings,
+  setShowBuildings,
   search,
   setSearch,
 }: FilterPanelProps) {
@@ -101,9 +105,15 @@ export default function FilterPanel({
         <div className="mt-auto px-4 pt-4 pb-4 border-t border-gray-300 dark:border-gray-700">
           <FilterCheckbox
             icon={<IconMap.Border className="h-5 w-5" />}
-            label="Property Line"
+            label="Property Lines"
             checked={showBoundary}
             onChange={setShowBoundary}
+          />
+          <FilterCheckbox
+            icon={<IconMap.building className="h-5 w-5" />}
+            label="Buildings"
+            checked={showBuildings}
+            onChange={setShowBuildings}
           />
         </div>
       </div>

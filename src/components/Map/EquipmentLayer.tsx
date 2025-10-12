@@ -1,42 +1,26 @@
-import { useEffect, useState, useRef } from "react";
-import { Marker, Tooltip, Popup } from "react-leaflet";
+// EquipmentLayer.tsx (key parts)
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import ClusteredEquipmentLayer from "./ClusteredEquipmentLayer"; // the small wrapper around leaflet.markercluster
 import { supabase } from "../../supabaseClient";
 import type { Database } from "../../types/supabase";
-import { useNavigate } from "react-router-dom";
 import L from "leaflet";
-import type { IconType } from "react-icons";
 import { IconMap } from "../../data/icons";
 import ReactDOMServer from "react-dom/server";
 
-// gets the types from the database schema, updated when changed are made automatically
-// alternatively, we could manually define the type here, but would have to update manually
-//type Equipment = {
-//     created_at: string | null;
-//     description: string | null;
-//     id: string;
-//     lat: number;
-//     lng: number;
-//     metadata: Json;
-//     name: string;
-//     type_id: number;
-// }
-export type Equipment = Database["public"]["Tables"]["equipment"]["Row"];
+type Equipment = Database["public"]["Tables"]["equipment"]["Row"];
 
-interface EquipmentLayerProps {
-  filters: number[];
+interface Props {
+  // from App -> FilterPanel
+  filters: number[]; // list of selected type_ids
+  search: string;    // debounced SearchBar value
   typeMap: Record<number, { displayName: string; icon: string; color: string }>;
-  search: string;
 }
 
-export default function EquipmentLayer({
-  filters,
-  typeMap,
-  search,
-}: EquipmentLayerProps) {
+export default function EquipmentLayer({ filters, search, typeMap }: Props) {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
   const navigate = useNavigate();
-  const iconCacheRef = useRef(new Map<string, L.DivIcon>());
-  const ICON_SIZE = 30;
+  const iconCache = useRef(new Map<string, L.DivIcon>());
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -56,111 +40,53 @@ export default function EquipmentLayer({
   }, []);
 
   useEffect(() => {
-    const fetchEquipment = async () => {
+    (async () => {
       const { data, error } = await supabase.from("equipment").select("*");
-      if (error) {
-        console.error("Error fetching equipment:", error.message);
-      } else {
-        // console.log("Fetched equipment data:", data);
-        setEquipment(data as Equipment[]);
-      }
-    };
-    fetchEquipment();
+      if (!error && data) setEquipment(data as Equipment[]);
+    })();
   }, []);
 
+  // 1) Apply your filters BEFORE clustering
   const term = search.trim().toLowerCase();
+  const filtered = useMemo(() => {
+    return equipment
+      // type filter: if none selected, show all
+      .filter((e) => !filters.length || (e.type_id != null && filters.includes(e.type_id)))
+      // name filter: startsWith is what you’re using today
+      .filter((e) => (term ? (e.name ?? "").toLowerCase().startsWith(term) : true));
+  }, [equipment, filters, term]);
 
-  const filteredEquipment = equipment
-    .filter((eq) => (filters.length ? filters.includes(eq.type_id) : equipment))
-    .filter((eq) =>
-      term ? (eq.name ?? "").toLowerCase().startsWith(term) : equipment
+  function getIcon(eq: Equipment) {
+    const type = eq.type_id != null ? typeMap[eq.type_id] : undefined;
+    const iconName = type?.icon ?? "Question";
+    const color = type?.color ?? "gray";
+    const key = `${iconName}:${color}:30`;
+
+    const cached = iconCache.current.get(key);
+    if (cached) return cached;
+
+    const Svg = IconMap[iconName];
+    const html = ReactDOMServer.renderToStaticMarkup(
+      <Svg style={{ color, width: 30, height: 30 }} />
     );
-
-  // changes react icon component to leaflet div icon
-  // with caching to avoid re-rendering the same icon multiple times
-  function getDivIcon(IconCmp: IconType, color: string, size = ICON_SIZE) {
-    const cacheKey = `${IconCmp.name}:${color}:${size}`;
-    const iconCache = iconCacheRef.current;
-    const cachedIcon = iconCache.get(cacheKey);
-    // console.log("Cache key:", cacheKey);
-    if (cachedIcon) return cachedIcon;
-
-    const svg = ReactDOMServer.renderToStaticMarkup(
-      <IconCmp style={{ color, width: size, height: size }} />
-    );
-
-    const icon = L.divIcon({
+    const divIcon = L.divIcon({
       className: "custom-marker",
-      html: `<div class="marker-inner">${svg}</div>`,
-      iconSize: [size, size],
-      iconAnchor: [size / 2, size],
-      popupAnchor: [0, -size / 2],
+      html: `<div class="marker-inner">${html}</div>`,
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
+      popupAnchor: [0, -15],
     });
-
-    iconCache.set(cacheKey, icon);
-    return icon;
+    iconCache.current.set(key, divIcon);
+    return divIcon;
   }
 
-  // Don’t render markers until we have a type map
-  if (!typeMap || Object.keys(typeMap).length === 0) return null;
-  console.log(isMobile);
   return (
-    <>
-      {filteredEquipment.map((eq) => {
-        const type = typeMap[eq.type_id];
-        // console.log("Type for equipment:", type);
-        const iconName = type?.icon ?? "Question";
-        const color = type?.color ?? "gray";
-        const IconCmp = IconMap[iconName];
-        // console.log("Icon component:", IconCmp);
-        const leafletIcon = getDivIcon(IconCmp, color);
-        // console.log("Leaflet icon:", leafletIcon);
-        return (
-          <Marker
-            key={eq.id}
-            position={[eq.lat, eq.lng]}
-            icon={leafletIcon}
-            eventHandlers={{
-              click: () => {
-                if (!isMobile) navigate(`/equipment/${eq.id}`);
-              },
-            }}
-          >
-            {isMobile ? (
-              <Popup autoPan closeButton offset={[5, 0]}>
-                <div className="text-sm md:text-lg lg:text-xl p-0 max-w-[80vw] m-0">
-                  <h3 className="font-bold">{eq.name}</h3>
-                  <p>Type: {type?.displayName ?? "Unknown"}</p>
-                  {eq.description && <p>{eq.description}</p>}
-                  <button
-                    className="mt-2 rounded-xl px-3 py-2 border text-sm font-medium hover:bg-gray-100 active:scale-[.99]"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      navigate(`/equipment/${eq.id}`);
-                    }}
-                  >
-                    View details
-                  </button>
-                </div>
-              </Popup>
-            ) : (
-              <Tooltip
-                direction="top"
-                offset={[5, -30]}
-                opacity={1}
-                permanent={false}
-              >
-                <div className="text-base sm:text-lg lg:text-xl p-3 max-w-[80vw]">
-                  <h3 className="font-bold">{eq.name}</h3>
-                  <p>Type: {type?.displayName ?? "Unknown"}</p>
-                  {eq.description && <p>{eq.description}</p>}
-                </div>
-              </Tooltip>
-            )}
-          </Marker>
-        );
-      })}
-    </>
+    <ClusteredEquipmentLayer
+      equipment={filtered}
+      getIcon={getIcon}
+      onClick={(eq) => navigate(`/equipment/${eq.id}`)}
+      isMobile ={isMobile}
+    />
   );
 }
+

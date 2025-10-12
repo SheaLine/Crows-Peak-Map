@@ -19,3 +19,41 @@
   background: black;
   border-radius: 110px;
 }
+
+
+.custom-cluster {
+  background: transparent;
+  border: none;
+}
+
+.custom-cluster .cluster-badge {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 9999px;
+  background: rgba(37, 99, 235, 0.9); /* indigo-600 */
+  border: 2px solid white;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.custom-cluster .cluster-badge span { transform: translateY(1px); }
+
+
+.leaflet-draw-tooltip {
+  z-index: 10000;               /* higher than map controls/panels */
+  pointer-events: none;         /* don’t block the map */
+}
+
+.leaflet-overlay-pane svg path.leaflet-draw-guide-dash {
+  stroke: #111;                 /* darker so it pops on imagery */
+  stroke-opacity: 0.95;
+  stroke-width: 2;
+}
+
+/* ensure the map itself is above neighbors if needed */
+.leaflet-container {
+  z-index: 1;
+}

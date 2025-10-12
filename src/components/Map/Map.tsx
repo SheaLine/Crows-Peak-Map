@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer} from "react-leaflet";
 import type { LatLngExpression } from "leaflet";
 import ranchBoundary from "../../data/MapScrollBoundary.json";
 import * as turf from "@turf/turf";
@@ -28,6 +28,7 @@ function map({ children }: MapProps) {
       maxBounds={maxBounds}
       maxBoundsViscosity={1.0}
       minZoom={16}
+      maxZoom={21}
       className="flex-1"
     >
       {/* <TileLayer
