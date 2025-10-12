@@ -16,23 +16,38 @@ export type Database = {
     Tables: {
       attachments: {
         Row: {
+          checksum: string | null
           equipment_id: string | null
+          file_size: number | null
           file_type: string | null
           id: string
+          is_primary: boolean
+          sort_order: number | null
+          taken_at: string | null
           uploaded_at: string | null
           url: string
         }
         Insert: {
+          checksum?: string | null
           equipment_id?: string | null
+          file_size?: number | null
           file_type?: string | null
           id?: string
+          is_primary?: boolean
+          sort_order?: number | null
+          taken_at?: string | null
           uploaded_at?: string | null
           url: string
         }
         Update: {
+          checksum?: string | null
           equipment_id?: string | null
+          file_size?: number | null
           file_type?: string | null
           id?: string
+          is_primary?: boolean
+          sort_order?: number | null
+          taken_at?: string | null
           uploaded_at?: string | null
           url?: string
         }
@@ -214,18 +229,21 @@ export type Database = {
           full_name: string | null
           id: string
           phone: string | null
+          role: Database["public"]["Enums"]["user_role"]
         }
         Insert: {
           created_at?: string
           full_name?: string | null
           id: string
           phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
         }
         Update: {
           created_at?: string
           full_name?: string | null
           id?: string
           phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
         }
         Relationships: []
       }
@@ -281,10 +299,19 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      import_equipment_geojson: {
+        Args: { g: Json }
+        Returns: {
+          inserted_id: string
+        }[]
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "user" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -411,6 +438,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["user", "admin"],
+    },
   },
 } as const
