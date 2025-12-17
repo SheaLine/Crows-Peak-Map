@@ -1,6 +1,12 @@
 # Environment Variables
 .env
 .env.local
+.env.development
+.env.test
+.env.production
+
+# BUT keep the example
+!.env.example
 
 # Logs
 logs
@@ -26,3 +32,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+#local docs
+supabase/migrations/README.md
+CLAUDE.md
+INSTALL_TESTING.md
+PHASE_1_2_SUMMARY.md
+SECURITY_FINDINGS.md
+spec.md
+TESTING.md

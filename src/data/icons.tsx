@@ -15,7 +15,7 @@ import { HiOutlineHomeModern } from "react-icons/hi2";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import { IoArrowBackCircle } from "react-icons/io5";
 import { TbGridDots } from "react-icons/tb";
-import { FaInfoCircle } from "react-icons/fa";
+import { FaInfoCircle, FaTrash, FaPlus, FaRegSave, FaList, FaImage, FaFileAlt, FaPaperclip} from "react-icons/fa";
 import {
   TbCircleNumber1,
   TbCircleNumber2,
@@ -53,6 +53,13 @@ export const IconMap: Record<string, IconType> = {
   building: HiOutlineHomeModern,
   edit: MdOutlineModeEditOutline,
   back: IoArrowBackCircle,
-  grid: TbGridDots, 
+  grid: TbGridDots,
   info: FaInfoCircle,
+  add: FaPlus,
+  trash: FaTrash,
+  save: FaRegSave,
+  list: FaList,
+  image: FaImage,
+  document: FaFileAlt,
+  attachment: FaPaperclip,
 };

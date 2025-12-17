@@ -60,11 +60,11 @@ export default function Navbar() {
 // };
 
   return (
-    <nav className="w-full bg-white dark:border-gray-700 dark:bg-gray-700/40 border-b shadow-sm px-4 py-3 flex items-center justify-between">
+    <nav className="w-full bg-white dark:border-gray-700 dark:bg-gray-700/40 border-b shadow-sm px-3 py-2 flex items-center justify-between">
       {/* Left: Logo + App Name */}
       <div className="flex items-center gap-2">
-        <img src="/logo.png" alt="Logo" className="h-32 w-32" />
-        <span className="text-xl font-semibold text-gray-900 dark:text-white hidden sm:block">
+        <img src="/logo.png" alt="Logo" className="h-16 w-16" />
+        <span className="text-base font-semibold text-gray-900 dark:text-white hidden sm:block">
           Crow's Peak Equipment Map
         </span>
       </div>
@@ -83,17 +83,17 @@ export default function Navbar() {
       <div className="flex items-center gap-4">
         {session && (
           <div className="hidden sm:flex items-center gap-2">
-            <span className="text-xl text-gray-900 dark:text-white font-medium truncate max-w-[500px]">
+            <span className="text-sm text-gray-900 dark:text-white font-medium truncate max-w-[500px]">
               {(session.user?.email ? session.user.email : "") + (isAdmin ? " (Admin)" : "")}
             </span>
           </div>
         )}
         <button
           onClick={handleLogout}
-          className="bg-[#2f6ea8] text-white shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#2f6ea8] px-6 py-3 rounded-md text-md font-medium cursor-pointer"
+          className="bg-[#2f6ea8] text-white shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#2f6ea8] px-4 py-2 rounded-md text-sm font-medium cursor-pointer"
         >
           <span className="flex place-items-center">
-            Logout <IconMap.LogOut className="ml-2 h-5 w-5" />
+            Logout <IconMap.LogOut className="ml-2 h-4 w-4" />
           </span>
         </button>
       </div>

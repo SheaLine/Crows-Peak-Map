@@ -25,8 +25,8 @@ function makeClusterIcon(cluster: L.MarkerCluster) {
   const Icon = IconMap[key];
 
   // render react-icon to an inline SVG string
-  const svg = ReactDOMServer.renderToString(<Icon size={30} />);
-  const size = 44;
+  const svg = ReactDOMServer.renderToString(<Icon size={36} />);
+  const size = 46;
 
   const haloBg = "rgba(0,0,0,0.25)"; // lighter, translucent
   const ringBg = "rgba(0,0,0,0.6)"; // medium
@@ -136,7 +136,7 @@ export default function ClusteredEquipmentLayer({
               ? `<div class="text-xs mt-1">${eq.description}</div>`
               : ""
           }`,
-          { direction: "top", offset: L.point(5, -30), permanent: false }
+          { direction: "top", offset: L.point(5, -36), permanent: false }
         );
         m.on("click", () => onClick?.(eq));
       }

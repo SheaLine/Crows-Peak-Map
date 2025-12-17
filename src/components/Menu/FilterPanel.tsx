@@ -43,7 +43,7 @@ export default function FilterPanel({
         Hamburger button — only visible on mobile
       */}
       <button
-        className="md:hidden absolute top-59 left-2 p-2 bg-white dark:bg-gray-800 rounded-md shadow-md z-[5000]"
+        className="md:hidden absolute top-59 left-2 p-1.5 bg-white dark:bg-gray-800 rounded-md shadow-md z-[5000]"
         onClick={() => setIsOpen(!isOpen)}
       >
         {/* Hamburger icon */}
@@ -57,27 +57,27 @@ export default function FilterPanel({
       {/* Filter panel */}
       <div
         className={`
-          fixed top-0 left-0 h-full w-72 bg-white dark:bg-gray-900 shadow-lg p-4 space-y-4 transform transition-transform duration-300 z-[5000]
+          fixed top-0 left-0 h-full w-60 bg-white dark:bg-gray-900 shadow-lg p-3 space-y-3 transform transition-transform duration-300 z-[5000]
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
           md:static md:translate-x-0
         `}
       >
         <div className="flex items-center justify-between md:justify-start">
-          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100"></h2>
+          <h2 className="text-base font-bold text-gray-800 dark:text-gray-100"></h2>
           <button
             className="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
             onClick={() => setIsOpen(false)}
           >
-            <IconMap.X className="h-6 w-6 text-white" />
+            <IconMap.X className="h-5 w-5 text-white" />
           </button>
         </div>
-        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+        <h2 className="text-base font-bold text-gray-800 dark:text-gray-100">
           Search by Name
         </h2>
         <div className="space-y-2">
           <SearchBar value={search} onChange={setSearch} />
         </div>
-        <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+        <h2 className="text-base font-bold text-gray-800 dark:text-gray-100">
           Filter by Type
         </h2>
         {types.map((t) => {

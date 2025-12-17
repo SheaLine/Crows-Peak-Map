@@ -21,7 +21,9 @@ export type Database = {
           file_size: number | null
           file_type: string | null
           id: string
+          is_image: boolean | null
           is_primary: boolean
+          label: string | null
           sort_order: number | null
           taken_at: string | null
           uploaded_at: string | null
@@ -33,7 +35,9 @@ export type Database = {
           file_size?: number | null
           file_type?: string | null
           id?: string
+          is_image?: boolean | null
           is_primary?: boolean
+          label?: string | null
           sort_order?: number | null
           taken_at?: string | null
           uploaded_at?: string | null
@@ -45,7 +49,9 @@ export type Database = {
           file_size?: number | null
           file_type?: string | null
           id?: string
+          is_image?: boolean | null
           is_primary?: boolean
+          label?: string | null
           sort_order?: number | null
           taken_at?: string | null
           uploaded_at?: string | null
@@ -76,7 +82,9 @@ export type Database = {
           lat: number
           lng: number
           metadata: Json | null
+          metadata_order: string[] | null
           name: string
+          summary: string | null
           type_id: number
         }
         Insert: {
@@ -86,7 +94,9 @@ export type Database = {
           lat: number
           lng: number
           metadata?: Json | null
+          metadata_order?: string[] | null
           name: string
+          summary?: string | null
           type_id: number
         }
         Update: {
@@ -96,7 +106,9 @@ export type Database = {
           lat?: number
           lng?: number
           metadata?: Json | null
+          metadata_order?: string[] | null
           name?: string
+          summary?: string | null
           type_id?: number
         }
         Relationships: [
@@ -247,6 +259,54 @@ export type Database = {
         }
         Relationships: []
       }
+      service_logs: {
+        Row: {
+          body: string | null
+          created_at: string
+          created_by: string | null
+          equipment_id: string
+          happened_at: string
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          equipment_id: string
+          happened_at?: string
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          equipment_id?: string
+          happened_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_logs_equipment_id_fkey"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipment"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_logs_equipment_id_fkey"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_details"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       types: {
         Row: {
           color: string | null
@@ -284,6 +344,7 @@ export type Database = {
           lines: Json | null
           lng: number | null
           metadata: Json | null
+          metadata_order: string[] | null
           name: string | null
           type_id: number | null
         }
@@ -299,16 +360,31 @@ export type Database = {
       }
     }
     Functions: {
+      equipment_delete_metadata_key: {
+        Args: { p_equipment_id: string; p_key: string }
+        Returns: undefined
+      }
+      equipment_set_metadata_order: {
+        Args: { p_equipment_id: string; p_order: string[] }
+        Returns: undefined
+      }
+      equipment_upsert_metadata: {
+        Args: { p_equipment_id: string; p_key: string; p_value: Json }
+        Returns: undefined
+      }
       import_equipment_geojson: {
         Args: { g: Json }
         Returns: {
           inserted_id: string
         }[]
       }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
+      import_lines_geojson: {
+        Args: { g: Json }
+        Returns: {
+          inserted_id: string
+        }[]
       }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       user_role: "user" | "admin"

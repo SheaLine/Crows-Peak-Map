@@ -1,4 +1,3 @@
-// ui/components/ReorderableMetaFacts.tsx
 import React, { useEffect, useMemo, useState } from "react";
 import {
   DndContext,
@@ -56,6 +55,8 @@ type MetaFactsProps = {
   /** The metadata object you already have */
   metadata: Record<string, unknown> | null | undefined;
   isMobile: boolean;
+  /** Optional: enable edit mode for inline editing */
+  editMode?: boolean;
   /** Optional: hide some keys */
   hiddenKeys?: string[];
   /** Optional: rename some keys */
@@ -72,18 +73,30 @@ type MetaFactsProps = {
   onOrderChange?: (orderedKeys: string[]) => void;
   /** Keys to pin at top (drag still allowed, but they start at top) */
   preferredOrder?: string[];
+  /** Saved order from database (highest priority) */
+  savedOrder?: string[] | null;
   mobileInitialCount?: number;
+  /** Called when field value changes (edit mode) */
+  onFieldChange?: (key: string, newValue: string | string[]) => void;
+  /** Called when field is deleted (edit mode) */
+  onFieldDelete?: (key: string) => void;
+  /** Called when new field is added (edit mode) */
+  onFieldAdd?: (key: string, value: string | string[]) => void;
 };
 
 export default function MetaFacts({
   metadata,
   isMobile,
+  editMode = false,
   hiddenKeys = [],
   labelMap = {},
   storageKey,
   onOrderChange,
   preferredOrder = [],
+  savedOrder = null,
   mobileInitialCount = 4,
+  onFieldChange,
+  onFieldDelete,
 }: MetaFactsProps) {
   const baseEntries = useMemo(() => {
     if (!metadata) return [] as Array<[string, unknown]>;
@@ -106,8 +119,20 @@ export default function MetaFacts({
   }, [baseEntries, preferredOrder]);
 
   // load persisted order if available
+  // Priority: 1) Database savedOrder, 2) localStorage, 3) defaultOrder
   const [order, setOrder] = useState<string[]>(defaultOrder);
   useEffect(() => {
+    // Priority 1: Use database savedOrder if available
+    if (savedOrder && savedOrder.length > 0) {
+      const cleaned = savedOrder.filter((k) => baseEntries.some(([bk]) => bk === k));
+      const missing = baseEntries
+        .map(([k]) => k)
+        .filter((k) => !cleaned.includes(k));
+      setOrder([...cleaned, ...missing]);
+      return;
+    }
+
+    // Priority 2: Fall back to localStorage
     if (!storageKey) return;
     const raw = localStorage.getItem(storageKey);
     if (!raw) return;
@@ -124,7 +149,7 @@ export default function MetaFacts({
       /* empty */
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [storageKey, baseEntries.length]); // re-run if set of keys changes
+  }, [storageKey, baseEntries.length, savedOrder]); // re-run if set of keys changes or savedOrder changes
 
   // keep order in sync if metadata keys changed drastically (no storageKey)
   useEffect(() => {
@@ -162,7 +187,7 @@ export default function MetaFacts({
     setOrder((prev) => arrayMove(prev, oldIndex, newIndex));
   };
 
-  if (items.length === 0) return null;
+  if (items.length === 0 && !editMode) return null;
 
   return (
     <div className="mt-0">
@@ -195,12 +220,17 @@ export default function MetaFacts({
                 key={key}
                 id={key}
                 label={labelMap[key] ?? humanize(key)}
+                value={value}
                 valueNode={renderValue(value)}
+                editMode={editMode}
+                onValueChange={(newValue) => onFieldChange?.(key, newValue)}
+                onDelete={() => onFieldDelete?.(key)}
               />
             ))}
           </dl>
         </SortableContext>
       </DndContext>
+
       {/* Mobile-only toggle */}
       {isMobile && (hiddenCount > 0 || showAllMobile) && (
         <div className="mt-3 flex">
@@ -223,11 +253,19 @@ export default function MetaFacts({
 function SortableRow({
   id,
   label,
+  value,
   valueNode,
+  editMode = false,
+  onValueChange,
+  onDelete,
 }: {
   id: string;
   label: string;
+  value: unknown;
   valueNode: React.ReactNode;
+  editMode?: boolean;
+  onValueChange?: (newValue: string | string[]) => void;
+  onDelete?: () => void;
 }) {
   const {
     attributes,
@@ -238,9 +276,51 @@ function SortableRow({
     isDragging,
   } = useSortable({ id });
 
+  const [isEditing, setIsEditing] = useState(false);
+  const isArrayValue = Array.isArray(value);
+
+  // For scalar values
+  const [editValue, setEditValue] = useState(String(value ?? ""));
+
+  // For array values
+  const [arrayItems, setArrayItems] = useState<string[]>(
+    isArrayValue ? value : []
+  );
+  const [newArrayItem, setNewArrayItem] = useState("");
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+
+  const handleSave = () => {
+    if (isArrayValue) {
+      onValueChange?.(arrayItems);
+    } else {
+      onValueChange?.(editValue);
+    }
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    if (isArrayValue) {
+      setArrayItems(Array.isArray(value) ? value : []);
+      setNewArrayItem("");
+    } else {
+      setEditValue(String(value ?? ""));
+    }
+    setIsEditing(false);
+  };
+
+  const handleAddArrayItem = () => {
+    if (newArrayItem.trim()) {
+      setArrayItems([...arrayItems, newArrayItem.trim()]);
+      setNewArrayItem("");
+    }
+  };
+
+  const handleRemoveArrayItem = (index: number) => {
+    setArrayItems(arrayItems.filter((_, i) => i !== index));
   };
 
   return (
@@ -254,19 +334,117 @@ function SortableRow({
       }`}
     >
       <dt className="flex items-center gap-2 text-sm/8 font-medium text-[#738195]">
-        <button
-          aria-label="Drag handle"
-          className="cursor-grab active:cursor-grabbing rounded p-1 hover:bg-gray-100 dark:hover:bg-white/10"
-          {...listeners}
-          {...attributes}
-          type="button"
-        >
-          <IconMap.grid className="h-3 w-3 text-gray-400" />
-        </button>
+        {editMode && (
+          <button
+            aria-label="Drag handle"
+            className="cursor-grab active:cursor-grabbing rounded p-1 hover:bg-gray-100 dark:hover:bg-white/10"
+            {...listeners}
+            {...attributes}
+            type="button"
+          >
+            <IconMap.grid className="h-3 w-3 text-gray-400" />
+          </button>
+        )}
         {label}
       </dt>
-      <dd className="mt-1 font-semibold text-end text-sm/8 text-black dark:text-white sm:col-span-1 sm:mt-0">
-        {valueNode}
+      <dd className="mt-1 font-semibold text-end text-sm/8 text-black dark:text-white sm:col-span-1 sm:mt-0 flex items-center justify-end gap-2">
+        {editMode && isEditing ? (
+          <>
+            {isArrayValue ? (
+              <div className="flex-1 flex flex-col gap-2">
+                {/* Array items as bubbles/chips */}
+                <div className="flex flex-wrap justify-end gap-1">
+                  {arrayItems.map((item, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs bg-white dark:bg-gray-700"
+                    >
+                      {item}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveArrayItem(index)}
+                        className="hover:text-red-600"
+                        aria-label={`Remove ${item}`}
+                      >
+                        <IconMap.X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                {/* Add new item input */}
+                <div className="flex gap-1">
+                  <input
+                    type="text"
+                    className="input input-bordered w-full text-sm text-black"
+                    placeholder="Add item..."
+                    value={newArrayItem}
+                    onChange={(e) => setNewArrayItem(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddArrayItem();
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddArrayItem}
+                    className="btn btn-xs bg-blue-600 text-white hover:brightness-110"
+                  >
+                    <IconMap.add className="h-3 w-3" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <input
+                type="text"
+                className="input input-bordered w-full text-sm text-black"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSave();
+                  if (e.key === "Escape") handleCancel();
+                }}
+                autoFocus
+              />
+            )}
+            <div className="flex flex-col gap-1">
+              <button
+                type="button"
+                onClick={handleSave}
+                className="btn btn-xs bg-green-600 text-white hover:brightness-110"
+              >
+                ✓
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="btn btn-xs bg-gray-600 text-white hover:brightness-110"
+              >
+                ✕
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <span
+              className={editMode ? "cursor-pointer hover:underline" : ""}
+              onClick={() => editMode && setIsEditing(true)}
+            >
+              {valueNode}
+            </span>
+            {editMode && (
+              <button
+                type="button"
+                onClick={onDelete}
+                className="btn btn-xs bg-red-600 text-white hover:brightness-110"
+                aria-label="Delete field"
+              >
+                <IconMap.trash className="h-3 w-3" />
+              </button>
+            )}
+          </>
+        )}
       </dd>
     </div>
   );

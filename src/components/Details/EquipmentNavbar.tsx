@@ -8,7 +8,9 @@ type Props = {
   subtitle?: string; // e.g. "Main Water Pump System"
   onBack?: () => void;
   onEdit?: () => void;
+  onCancel?: () => void; // NEW: called when cancel button clicked
   showEdit?: boolean;
+  editMode?: boolean; // NEW: whether edit mode is active
   /** Tailor the inner container width to match your page content */
   maxWidthClass?: string; // e.g. "max-w-6xl" | "max-w-7xl"
   /** Optional styling hook for the gray bar */
@@ -19,7 +21,9 @@ export const EquipmentNavbar: React.FC<Props> = ({
   title,
   subtitle,
   onEdit,
+  onCancel,
   showEdit = true,
+  editMode = false,
   maxWidthClass = "max-w-6xl",
   barClassName = "",
 }) => {
@@ -40,7 +44,16 @@ export const EquipmentNavbar: React.FC<Props> = ({
     }
   }, []);
   const navigate = useNavigate();
-  const handleBack = () => navigate("/");
+  const handleBack = () => {
+    try {
+      // Use replace: true to force React Router to unmount current component and mount new one
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error("Navigation error:", error);
+      // Fallback to window.location if navigate fails
+      window.location.href = "/";
+    }
+  };
   return (
     <header
       className={[
@@ -80,17 +93,37 @@ export const EquipmentNavbar: React.FC<Props> = ({
           ) : null}
         </div>
 
-        {/* Right: Edit */}
-        <div className="justify-self-end">
-          {showEdit && (
+        {/* Right: Edit / Save+Cancel Buttons */}
+        <div className="justify-self-end flex gap-2">
+          {showEdit && !editMode && (
             <button
               type="button"
               onClick={onEdit}
-              className="inline-flex items-center gap-2 rounded-lg bg-[#2f6ea8] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-[#2f6ea8]"
+              className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 transition-colors bg-[#2f6ea8] text-white focus:ring-[#2f6ea8]"
             >
               <IconMap.edit className="h-5 w-5" />
               {!isMobile && <span>Edit</span>}
             </button>
+          )}
+          {showEdit && editMode && (
+            <>
+              <button
+                type="button"
+                onClick={onCancel}
+                className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 transition-colors bg-gray-600 text-white focus:ring-gray-600"
+              >
+                <IconMap.X className="h-5 w-5" />
+                {!isMobile && <span>Cancel</span>}
+              </button>
+              <button
+                type="button"
+                onClick={onEdit}
+                className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 transition-colors bg-green-600 text-white focus:ring-green-600"
+              >
+                <IconMap.save className="h-5 w-5" />
+                {!isMobile && <span>Save</span>}
+              </button>
+            </>
           )}
         </div>
       </div>
