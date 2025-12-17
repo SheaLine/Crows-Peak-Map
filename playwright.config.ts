@@ -40,6 +40,9 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     env: {
       NODE_ENV: 'test', // Ensure test mode
+      // Forward Vite env vars from parent process (GitHub Actions secrets in CI, .env.test locally)
+      VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL || '',
+      VITE_SUPABASE_ANON_KEY: process.env.VITE_SUPABASE_ANON_KEY || '',
     },
   },
 });
