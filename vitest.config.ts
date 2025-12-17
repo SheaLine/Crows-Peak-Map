@@ -15,12 +15,13 @@ export default defineConfig(({ mode = 'test' }) => {
       setupFiles: ['./src/tests/setup.ts'],
       env: {
         // Inject environment variables into tests
-        VITE_SUPABASE_URL: env.VITE_SUPABASE_URL,
-        VITE_SUPABASE_ANON_KEY: env.VITE_SUPABASE_ANON_KEY,
-        TEST_USER_EMAIL: env.TEST_USER_EMAIL,
-        TEST_USER_PASSWORD: env.TEST_USER_PASSWORD,
-        TEST_ADMIN_EMAIL: env.TEST_ADMIN_EMAIL,
-        TEST_ADMIN_PASSWORD: env.TEST_ADMIN_PASSWORD,
+        // Use .env.test file locally, fall back to process.env in CI
+        VITE_SUPABASE_URL: env.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL || '',
+        VITE_SUPABASE_ANON_KEY: env.VITE_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || '',
+        TEST_USER_EMAIL: env.TEST_USER_EMAIL || process.env.TEST_USER_EMAIL || '',
+        TEST_USER_PASSWORD: env.TEST_USER_PASSWORD || process.env.TEST_USER_PASSWORD || '',
+        TEST_ADMIN_EMAIL: env.TEST_ADMIN_EMAIL || process.env.TEST_ADMIN_EMAIL || '',
+        TEST_ADMIN_PASSWORD: env.TEST_ADMIN_PASSWORD || process.env.TEST_ADMIN_PASSWORD || '',
       },
     coverage: {
       provider: 'v8',
