@@ -46,5 +46,3 @@ TESTING.md
 #test results
 test-results/
 playwright-report/
-seeds/
-src/tests/

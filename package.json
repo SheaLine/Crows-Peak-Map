@@ -19,7 +19,7 @@
     "supabase:link:test": "supabase link --project-ref jxxoloziwfskksysxphe",
     "test": "vitest --mode test",
     "test:unit": "vitest run --reporter=verbose --mode test",
-    "test:security": "vitest run --grep security --mode test",
+    "test:security": "vitest run -t security --mode test",
     "test:coverage": "vitest run --coverage --mode test",
     "test:watch": "vitest --mode test",
     "test:e2e": "cross-env NODE_ENV=test playwright test",
