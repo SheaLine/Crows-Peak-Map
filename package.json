@@ -26,7 +26,9 @@
     "test:e2e:ui": "cross-env NODE_ENV=test playwright test --ui",
     "test:e2e:headed": "cross-env NODE_ENV=test playwright test --headed",
     "test:all": "npm run test:unit && npm run test:security && npm run test:e2e",
-    "audit:security": "npm audit --audit-level=moderate && npm run lint:security"
+    "audit:security": "npm audit --audit-level=moderate && npm run lint:security",
+    "seed:test": "tsx supabase/seeds/create-test-users.ts && tsx supabase/seeds/run-seed-sql.ts",
+    "seed:users": "tsx supabase/seeds/create-test-users.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -53,6 +55,7 @@
   "devDependencies": {
     "@eslint/js": "^9.33.0",
     "@playwright/test": "^1.57.0",
+    "dotenv": "^16.4.7",
     "@tailwindcss/postcss": "^4.1.12",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
@@ -75,6 +78,7 @@
     "jsdom": "^25.0.1",
     "msw": "^2.12.4",
     "supabase": "^2.39.2",
+    "tsx": "^4.7.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.1",
     "vite": "^7.1.2",

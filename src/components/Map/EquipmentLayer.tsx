@@ -19,6 +19,7 @@ interface Props {
 
 export default function EquipmentLayer({ filters, search, typeMap }: Props) {
   const [equipment, setEquipment] = useState<Equipment[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const iconCache = useRef(new Map<string, L.DivIcon>());
 
@@ -41,8 +42,14 @@ export default function EquipmentLayer({ filters, search, typeMap }: Props) {
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       const { data, error } = await supabase.from("equipment").select("*");
-      if (!error && data) setEquipment(data as Equipment[]);
+      if (error) {
+        console.error("Failed to fetch equipment:", error);
+      } else if (data) {
+        setEquipment(data as Equipment[]);
+      }
+      setLoading(false);
     })();
   }, []);
 
@@ -78,6 +85,11 @@ export default function EquipmentLayer({ filters, search, typeMap }: Props) {
     });
     iconCache.current.set(key, divIcon);
     return divIcon;
+  }
+
+  // Don't render equipment markers until data is loaded
+  if (loading) {
+    return null;
   }
 
   return (

@@ -1,5 +1,6 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
+import { useSession } from "@supabase/auth-helpers-react";
 import type { Database } from "../../types/supabase";
 import { supabase } from "../../supabaseClient";
 import PhotoUpload from "./PhotoUpload";
@@ -32,6 +33,8 @@ interface SignedAttachment {
 const BUCKET = "equipment-attachments";
 
 export default function EquipmentDetails() {
+  const session = useSession();
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [equipment, setEquipment] = useState<EquipmentDetails | null>(null);
   const [images, setImages] = useState<SignedAttachment[]>([]);
@@ -43,6 +46,18 @@ export default function EquipmentDetails() {
 
   // Initialize storage cache for images
   const imageCache = useStorageCache(`storage:images:${id}`);
+
+  // Auth guard - redirect to login if not authenticated
+  useEffect(() => {
+    if (!session) {
+      navigate('/login', { replace: true });
+    }
+  }, [session, navigate]);
+
+  // Return early if not authenticated (prevents flash of content)
+  if (!session) {
+    return null;
+  }
 
   // check if device is a mobile device
   useEffect(() => {

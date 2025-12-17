@@ -42,3 +42,9 @@ PHASE_1_2_SUMMARY.md
 SECURITY_FINDINGS.md
 spec.md
 TESTING.md
+
+#test results
+test-results/
+playwright-report/
+seeds/
+src/tests/
