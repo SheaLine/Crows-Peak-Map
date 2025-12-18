@@ -3,12 +3,12 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import Auth from '@/components/Auth/Login';
 
-// Mock the supabase client
+// Mock the supabase client - define mock before vi.mock to avoid hoisting issues
 const mockSignInWithPassword = vi.fn();
 vi.mock('@/supabaseClient', () => ({
   supabase: {
     auth: {
-      signInWithPassword: mockSignInWithPassword,
+      signInWithPassword: (...args: any[]) => mockSignInWithPassword(...args),
     },
   },
 }));

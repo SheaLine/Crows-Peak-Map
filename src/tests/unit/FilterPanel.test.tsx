@@ -133,7 +133,7 @@ describe('FilterPanel Component', () => {
 
   it('should toggle multiple filters independently', () => {
     const setFilters = vi.fn();
-    render(<FilterPanel {...defaultProps} setFilters={setFilters} />);
+    const { rerender } = render(<FilterPanel {...defaultProps} setFilters={setFilters} />);
 
     const electricCheckbox = screen.getByLabelText('Electric');
     const waterCheckbox = screen.getByLabelText('Water');
@@ -143,8 +143,8 @@ describe('FilterPanel Component', () => {
 
     setFilters.mockClear();
 
-    // Simulate filters now includes 1
-    const { rerender } = render(<FilterPanel {...defaultProps} filters={[1]} setFilters={setFilters} />);
+    // Simulate filters now includes 1 - use rerender instead of render
+    rerender(<FilterPanel {...defaultProps} filters={[1]} setFilters={setFilters} />);
 
     fireEvent.click(screen.getByLabelText('Water'));
     expect(setFilters).toHaveBeenCalledWith([1, 2]);
@@ -209,16 +209,18 @@ describe('FilterPanel Component', () => {
     // Open the panel first
     fireEvent.click(hamburgerButton);
 
-    // Click the X button to close
-    const closeButton = screen.getByRole('button', { hidden: true });
-    // Find the button with X icon
-    const xButton = Array.from(container.querySelectorAll('button')).find(
-      (btn) => btn.querySelector('svg') && btn.className.includes('md:hidden')
+    // Find the X button inside the panel - it has md:hidden and p-2 classes, contains SVG, but NOT absolute
+    const allButtons = Array.from(container.querySelectorAll('button'));
+    const xButton = allButtons.find(
+      (btn) =>
+        btn.querySelector('svg') &&
+        btn.className.includes('md:hidden') &&
+        btn.className.includes('p-2') &&
+        !btn.className.includes('absolute')
     );
 
-    if (xButton) {
-      fireEvent.click(xButton);
-    }
+    expect(xButton).toBeTruthy();
+    fireEvent.click(xButton!);
 
     const filterPanel = container.querySelector('.fixed.top-0.left-0');
     expect(filterPanel?.className).toContain('-translate-x-full');

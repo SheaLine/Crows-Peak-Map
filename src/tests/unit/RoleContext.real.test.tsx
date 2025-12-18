@@ -142,7 +142,7 @@ describe('RoleContext', () => {
       } as any;
 
       render(
-        <SessionContextProvider supabaseClient={mockClient}>
+        <SessionContextProvider supabaseClient={mockClient} initialSession={userSession as Session}>
           <RoleProvider>
             <TestComponent />
           </RoleProvider>
@@ -240,7 +240,7 @@ describe('RoleContext', () => {
       } as any;
 
       render(
-        <SessionContextProvider supabaseClient={mockClient}>
+        <SessionContextProvider supabaseClient={mockClient} initialSession={adminSession as Session}>
           <RoleProvider>
             <TestComponent />
           </RoleProvider>

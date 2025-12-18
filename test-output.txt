@@ -1,0 +1,136 @@
+
+> crows-peak-map@0.0.0 test:coverage
+> vitest run --coverage --mode test
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/sline/Documents/CrowsPeak/cursor/Crows-Peak-Map[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+[90mstdout[2m | src/tests/security/authorization.security.test.ts
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/unit/RoleContext.real.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/unit/icons.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/security/file-upload.security.test.ts
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/unit/SearchBar.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/unit/cache.test.ts
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/unit/CheckBox.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/unit/Login.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/integration/EquipmentDetails.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+ [32m✓[39m src/tests/security/authorization.security.test.ts [2m([22m[2m15 tests[22m[2m)[22m[90m 30[2mms[22m[39m
+[90mstdout[2m | src/tests/unit/FilterPanel.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/unit/InputField.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/unit/Navbar.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+ [32m✓[39m src/tests/unit/cache.test.ts [2m([22m[2m19 tests[22m[2m)[22m[90m 76[2mms[22m[39m
+[90mstdout[2m | src/tests/unit/SubmitButton.test.tsx
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+[90mstdout[2m | src/tests/security/auth.security.test.ts
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+ [32m✓[39m src/tests/unit/icons.test.tsx [2m([22m[2m26 tests[22m[2m)[22m[90m 19[2mms[22m[39m
+[90mstdout[2m | src/tests/security/auth.security.test.ts[2m > [22m[2mAuthentication Security Tests[2m > [22m[2mLogin Security[2m > [22m[2mshould not log sensitive session data
+[22m[39mSession loaded
+
+[90mstdout[2m | src/tests/security/xss-injection.security.test.ts
+[22m[39mTest environment loaded: {
+  supabaseUrl: [32m'https://jxxoloziwfskksysxphe.supabase.co'[39m,
+  hasAnonKey: [33mtrue[39m
+}
+
+ [31m❯[39m src/tests/unit/RoleContext.real.test.tsx [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[90m 136[2mms[22m[39m
+[31m   [31m×[31m RoleContext[2m > [22museRole hook[2m > [22mshould fallback to profiles table when app_metadata is not admin[90m 21[2mms[22m[31m[39m
+[31m     → [2mexpect([22m[31melement[31m[2m).toHaveTextContent()[22m
+
+Expected element to have text content:
+[32m  admin[31m
+Received:
+[31m  user[31m[39m
+ [32m✓[39m src/tests/security/auth.security.test.ts [2m([22m[2m13 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+ [32m✓[39m src/tests/unit/CheckBox.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 343[2mms[22m[39m
+ [32m✓[39m src/tests/security/xss-injection.security.test.ts [2m([22m[2m25 tests[22m[2m)[22m[90m 21[2mms[22m[39m
+ [32m✓[39m src/tests/unit/InputField.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 306[2mms[22m[39m
+ [32m✓[39m src/tests/unit/SubmitButton.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[90m 281[2mms[22m[39m
+ [32m✓[39m src/tests/unit/Login.test.tsx [2m([22m[2m18 tests[22m[2m)[22m[33m 451[2mms[22m[39m
+ [32m✓[39m src/tests/unit/SearchBar.test.tsx [2m([22m[2m19 tests[22m[2m)[22m[33m 403[2mms[22m[39m
+ [32m✓[39m src/tests/unit/Navbar.test.tsx [2m([22m[2m21 tests[22m[2m)[22m[33m 320[2mms[22m[39m
+ [32m✓[39m src/tests/security/file-upload.security.test.ts [2m([22m[2m25 tests[22m[2m)[22m[33m 1003[2mms[22m[39m
+   [33m[2m✓[22m[39m File Upload Security Tests[2m > [22mFile Size Limits[2m > [22mshould reject files exceeding size limit [33m957[2mms[22m[39m
+ [32m✓[39m src/tests/unit/FilterPanel.test.tsx [2m([22m[2m28 tests[22m[2m)[22m[33m 806[2mms[22m[39m
+ [32m✓[39m src/tests/integration/EquipmentDetails.test.tsx [2m([22m[2m38 tests[22m[2m)[22m[33m 827[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[1m[7m Unhandled Errors [27m[22m⎯⎯⎯⎯⎯⎯[39m
+[31m[1m
+Vitest caught 17 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
+[31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m14 passed[39m[22m[90m (15)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m294 passed[39m[22m[90m (295)[39m
+[2m     Errors [22m [1m[31m17 errors[39m[22m
+[2m   Start at [22m 18:53:09
+[2m   Duration [22m 4.99s[2m (transform 1.62s, setup 6.06s, collect 3.94s, tests 5.03s, environment 21.09s, prepare 4.41s)[22m
+
