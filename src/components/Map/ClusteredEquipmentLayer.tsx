@@ -25,7 +25,7 @@ function makeClusterIcon(cluster: L.MarkerCluster) {
   const Icon = IconMap[key];
 
   // render react-icon to an inline SVG string
-  const svg = ReactDOMServer.renderToString(<Icon size={36} />);
+  const svg = ReactDOMServer.renderToString(<Icon size={32} />);
   const size = 46;
 
   const haloBg = "rgba(0,0,0,0.25)"; // lighter, translucent

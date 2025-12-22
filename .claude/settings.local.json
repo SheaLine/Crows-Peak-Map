@@ -8,7 +8,8 @@
       "Bash(npm run test:unit:*)",
       "Bash(npm run test:coverage:*)",
       "Bash(cat:*)",
-      "Bash(npx playwright test --project=\"Mobile Safari\" -g \"should show admin features for admin users\")"
+      "Bash(npx playwright test --project=\"Mobile Safari\" -g \"should show admin features for admin users\")",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

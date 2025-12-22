@@ -74,14 +74,14 @@ export default function EquipmentLayer({ filters, search, typeMap }: Props) {
 
     const Svg = IconMap[iconName];
     const html = ReactDOMServer.renderToStaticMarkup(
-      <Svg style={{ color, width: 36, height: 36 }} />
+      <Svg style={{ color, width: 30, height: 30 }} />
     );
     const divIcon = L.divIcon({
       className: "custom-marker",
       html: `<div class="marker-inner">${html}</div>`,
-      iconSize: [36, 36],
-      iconAnchor: [18, 36],
-      popupAnchor: [0, -18],
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
+      popupAnchor: [0, -15],
     });
     iconCache.current.set(key, divIcon);
     return divIcon;
