@@ -262,11 +262,14 @@ describe('LogsTab Component', () => {
     it('should update title field when user types', async () => {
       render(<LogsTab {...defaultProps} isAdmin={true} />);
 
-      await waitFor(() => {
-        fireEvent.click(screen.getByText('Add Log'));
-      });
+      // Wait for logs to load
+      await screen.findByText('Oil Change');
 
-      const titleInput = screen.getByPlaceholderText('e.g., Annual maintenance') as HTMLInputElement;
+      // Open modal
+      fireEvent.click(screen.getAllByText('Add Log')[0]);
+
+      // Wait for modal and get title input
+      const titleInput = await screen.findByPlaceholderText('e.g., Annual maintenance') as HTMLInputElement;
       fireEvent.change(titleInput, { target: { value: 'New Service' } });
 
       expect(titleInput.value).toBe('New Service');
@@ -275,11 +278,14 @@ describe('LogsTab Component', () => {
     it('should update date field when user changes it', async () => {
       render(<LogsTab {...defaultProps} isAdmin={true} />);
 
-      await waitFor(() => {
-        fireEvent.click(screen.getByText('Add Log'));
-      });
+      // Wait for logs to load
+      await screen.findByText('Oil Change');
 
-      const dateInput = screen.getByLabelText(/Date/) as HTMLInputElement;
+      // Open modal
+      fireEvent.click(screen.getAllByText('Add Log')[0]);
+
+      // Wait for modal and get date input
+      const dateInput = await screen.findByLabelText(/Date/) as HTMLInputElement;
       fireEvent.change(dateInput, { target: { value: '2024-06-15' } });
 
       expect(dateInput.value).toBe('2024-06-15');
@@ -288,11 +294,14 @@ describe('LogsTab Component', () => {
     it('should update body field when user types', async () => {
       render(<LogsTab {...defaultProps} isAdmin={true} />);
 
-      await waitFor(() => {
-        fireEvent.click(screen.getByText('Add Log'));
-      });
+      // Wait for logs to load
+      await screen.findByText('Oil Change');
 
-      const bodyInput = screen.getByPlaceholderText('Detailed notes about the service...') as HTMLTextAreaElement;
+      // Open modal
+      fireEvent.click(screen.getAllByText('Add Log')[0]);
+
+      // Wait for modal and get body input
+      const bodyInput = await screen.findByPlaceholderText('Detailed notes about the service...') as HTMLTextAreaElement;
       fireEvent.change(bodyInput, { target: { value: 'Service details here' } });
 
       expect(bodyInput.value).toBe('Service details here');
