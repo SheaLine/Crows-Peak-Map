@@ -39,7 +39,7 @@ test.describe('Authentication E2E Tests', () => {
 
     // Click sign in and wait for navigation
     await Promise.all([
-      page.waitForURL('/', { timeout: 30000 }),
+      page.waitForURL('/', { timeout: 60000 }),
       page.getByRole('button', { name: /sign in/i }).click()
     ]);
 
@@ -103,7 +103,7 @@ test.describe('Authentication E2E Tests', () => {
 
     // Click sign in and wait for navigation
     await Promise.all([
-      page.waitForURL('/', { timeout: 30000 }),
+      page.waitForURL('/', { timeout: 60000 }),
       page.getByRole('button', { name: /sign in/i }).click()
     ]);
 
@@ -132,7 +132,7 @@ test.describe('Authorization E2E Tests', () => {
 
     // Click sign in and wait for navigation
     await Promise.all([
-      page.waitForURL('/', { timeout: 30000 }),
+      page.waitForURL('/', { timeout: 60000 }),
       page.getByRole('button', { name: /sign in/i }).click()
     ]);
 
@@ -174,7 +174,7 @@ test.describe('Authorization E2E Tests', () => {
 
     // Click sign in and wait for navigation
     await Promise.all([
-      page.waitForURL('/', { timeout: 30000 }),
+      page.waitForURL('/', { timeout: 60000 }),
       page.getByRole('button', { name: /sign in/i }).click()
     ]);
 
@@ -199,10 +199,10 @@ test.describe('Authorization E2E Tests', () => {
     await expect(page.url()).toContain('/equipment/');
 
     // Wait a bit for admin role to load
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(3000);
 
     // Edit button should be visible for admin
-    await expect(page.getByRole('button', { name: /edit/i })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole('button', { name: /edit/i })).toBeVisible({ timeout: 15000 });
   });
 
   test('should prevent direct URL access to admin-only pages without auth', async ({ page }) => {

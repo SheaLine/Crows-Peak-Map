@@ -98,7 +98,9 @@ export default function PhotoUpload({
     } finally {
       setUploading(false);
       // optional: reset input
-      e.currentTarget.value = "";
+      if (e.currentTarget) {
+        e.currentTarget.value = "";
+      }
     }
   }
 

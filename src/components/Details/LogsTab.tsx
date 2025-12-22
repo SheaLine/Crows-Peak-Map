@@ -221,8 +221,8 @@ export default function LogsTab({ equipmentId, isAdmin, editMode }: LogsTabProps
 
       {/* Add Log Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-lg rounded-lg bg-white shadow-xl dark:bg-gray-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setShowModal(false)}>
+          <div className="w-full max-w-lg rounded-lg bg-white shadow-xl dark:bg-gray-800" onClick={(e) => e.stopPropagation()}>
             <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-700">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 Add Service Log
@@ -337,7 +337,7 @@ function LogCard({
   });
 
   return (
-    <div className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
+    <div data-testid="log-entry" className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-800">
       {/* Delete Button - Only show in edit mode for admins */}
       {isAdmin && editMode && (
         <button

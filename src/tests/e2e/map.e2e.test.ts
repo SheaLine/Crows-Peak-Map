@@ -61,13 +61,17 @@ test.describe('Map Functionality E2E Tests', () => {
   test('should show equipment details on marker click', async ({ page }) => {
     await page.waitForSelector('.leaflet-marker-icon', { timeout: 15000 });
 
+    // Wait for map to stabilize
+    await page.waitForTimeout(2000);
+
     // Click an individual marker (not a cluster)
     // Find a marker that's not a cluster icon
     const individualMarker = page.locator('.leaflet-marker-icon').filter({ hasNot: page.locator('.cluster-icon') }).first();
+    await individualMarker.waitFor({ state: 'visible', timeout: 10000 });
     await individualMarker.click({ force: true });
 
     // Should show equipment details (popup on mobile, navigation on desktop)
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(4000);
 
     // Check for either popup or navigation to details page
     const hasPopup = await page.locator('.leaflet-popup').isVisible();
@@ -184,7 +188,7 @@ test.describe('Map Functionality E2E Tests', () => {
       await page.waitForSelector('.leaflet-marker-icon', { timeout: 10000 });
       await page.locator('.leaflet-marker-icon').first().click();
 
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(3000);
 
       // Should show popup with "View details" button
       const popup = page.locator('.leaflet-popup');
@@ -220,22 +224,26 @@ test.describe('Equipment Details E2E Tests', () => {
     const markerCount = await markers.count();
     expect(markerCount).toBeGreaterThan(0);
 
+    // Wait for map to stabilize before clicking
+    await page.waitForTimeout(2000);
+
     // Click first marker and handle either desktop navigation or mobile popup
+    await markers.first().waitFor({ state: 'visible', timeout: 10000 });
     await markers.first().click({ force: true });
 
-    // Wait a bit for either navigation or popup to appear
-    await page.waitForTimeout(2000);
+    // Wait a bit for either navigation or popup to appear (increased for mobile)
+    await page.waitForTimeout(4000);
 
     // Check if we navigated directly (desktop) or need to handle popup (mobile)
     if (!page.url().includes('/equipment/')) {
       // Mobile popup flow
-      await page.waitForSelector('.leaflet-popup', { timeout: 10000 });
+      await page.waitForSelector('.leaflet-popup', { timeout: 20000 });
       const viewDetailsButton = page.getByRole('button', { name: /view.*details/i });
-      await viewDetailsButton.waitFor({ state: 'visible', timeout: 10000 });
+      await viewDetailsButton.waitFor({ state: 'visible', timeout: 15000 });
       await viewDetailsButton.click();
 
       // Wait for navigation after button click
-      await page.waitForURL(/\/equipment\//, { timeout: 10000 });
+      await page.waitForURL(/\/equipment\//, { timeout: 15000 });
     }
 
     // Verify we're on equipment details page
@@ -262,7 +270,7 @@ test.describe('Equipment Details E2E Tests', () => {
 
         // Wait for tab state to update (increased for WebKit/Safari)
         // WebKit needs more time for URL param -> React state propagation
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(2500);
 
         // Tab content should be visible
         await expect(tab).toHaveAttribute('aria-selected', 'true');
@@ -290,7 +298,7 @@ test.describe('Equipment Details E2E Tests', () => {
 
     if (await logsTab.isVisible()) {
       await logsTab.click();
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(2000);
 
       // Look for "Load more" button
       const loadMoreButton = page.getByRole('button', { name: /load.*more/i });
@@ -299,7 +307,7 @@ test.describe('Equipment Details E2E Tests', () => {
         const initialCount = await page.locator('.log-entry, [data-testid="log-entry"]').count();
 
         await loadMoreButton.click();
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(2000);
 
         const newCount = await page.locator('.log-entry, [data-testid="log-entry"]').count();
 
@@ -316,7 +324,7 @@ test.describe('Equipment Details E2E Tests', () => {
       await backButton.click();
 
       // Should return to map view
-      await expect(page).toHaveURL('/', { timeout: 5000 });
+      await expect(page).toHaveURL('/', { timeout: 8000 });
     }
   });
 });

@@ -7,7 +7,8 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nfix(ci): forward Vite env vars to Playwright webServer\n\n- Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to webServer.env config\n- Fixes \"Missing required environment variables\" error in GitHub Actions\n- Environment variables now properly forwarded from parent process to webServer subprocess\n- Works in both CI (GitHub Actions secrets) and local (.env.test file)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(npm run test:unit:*)",
       "Bash(npm run test:coverage:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npx playwright test --project=\"Mobile Safari\" -g \"should show admin features for admin users\")"
     ],
     "deny": [],
     "ask": []

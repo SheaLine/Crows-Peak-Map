@@ -99,6 +99,7 @@ export const EquipmentNavbar: React.FC<Props> = ({
             <button
               type="button"
               onClick={onEdit}
+              aria-label="Edit"
               className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 transition-colors bg-[#2f6ea8] text-white focus:ring-[#2f6ea8]"
             >
               <IconMap.edit className="h-5 w-5" />
@@ -110,6 +111,7 @@ export const EquipmentNavbar: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={onCancel}
+                aria-label="Cancel"
                 className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 transition-colors bg-gray-600 text-white focus:ring-gray-600"
               >
                 <IconMap.X className="h-5 w-5" />
@@ -118,6 +120,7 @@ export const EquipmentNavbar: React.FC<Props> = ({
               <button
                 type="button"
                 onClick={onEdit}
+                aria-label="Save"
                 className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm hover:brightness-110 focus:outline-none focus:ring-2 transition-colors bg-green-600 text-white focus:ring-green-600"
               >
                 <IconMap.save className="h-5 w-5" />
