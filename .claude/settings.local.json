@@ -14,7 +14,8 @@
       "Bash(then cat .npmrc)",
       "Bash(else echo \"No .npmrc file found\")",
       "Bash(fi)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
