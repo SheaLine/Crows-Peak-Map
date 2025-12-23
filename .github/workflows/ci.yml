@@ -52,10 +52,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (workaround for npm optional deps bug)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: Run ESLint
         run: npm run lint
@@ -74,10 +75,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (workaround for npm optional deps bug)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: Run unit tests
         run: npm run test:unit
@@ -118,10 +120,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (workaround for npm optional deps bug)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: Run security tests
         run: npm run test:security
@@ -143,10 +146,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (workaround for npm optional deps bug)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
@@ -190,10 +194,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (workaround for npm optional deps bug)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: Build application
         run: npm run build
@@ -219,10 +224,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (workaround for npm optional deps bug)
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
