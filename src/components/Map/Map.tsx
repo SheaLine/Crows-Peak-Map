@@ -28,6 +28,7 @@ function map({ children }: MapProps) {
       maxBounds={maxBounds}
       maxBoundsViscosity={1.0}
       minZoom={16}
+      maxZoom={21}
       className="flex-1"
     >
       {/* <TileLayer

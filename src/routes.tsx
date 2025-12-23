@@ -15,5 +15,5 @@ export const router = createBrowserRouter([
   {path: "/complete-profile", element: <CompleteProfile />},
   {path: "/password-forgot", element: <ForgotPassword />},
   {path: "/password-reset", element: <ResetPassword />},
-  {path: "/equipment/:id", element: <EquipmentDetails />}
+  {path: "/equipment/:id", element: <EquipmentDetails />},
 ]);

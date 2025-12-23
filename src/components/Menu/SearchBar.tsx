@@ -11,7 +11,7 @@ interface SearchBarProps {
 export default function SearchBar({
   value,
   onChange,
-  placeholder = "Search equipment or lines...",
+  placeholder = "Search equipment...",
   debounceMs = 300,
 }: SearchBarProps) {
   const [local, setLocal] = useState(value);
@@ -34,7 +34,7 @@ export default function SearchBar({
         value={local}
         onChange={(e) => setLocal(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 pl-9 pr-9 p-3 text-sm
+        className="w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 pl-8 pr-8 p-2 text-sm
                    text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
       {showClear && (

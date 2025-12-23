@@ -7,6 +7,7 @@ import Map from "./components/Map/Map";
 import EquipmentLayer from "./components/Map/EquipmentLayer";
 import LineLayer from "./components/Map/LineLayer";
 import PropertyBoundary from "./components/Map/PropertyBoundery";
+import BuildingsLayer from "./components/Map/Buildings";
 import FilterPanel from "./components/Menu/FilterPanel";
 import { supabase } from "./supabaseClient";
 import type { Database } from "./types/supabase";
@@ -20,6 +21,7 @@ function App() {
   const [filters, setFilters] = useState<number[]>([]);
   const [types, setTypes] = useState<TypeRow[]>([]);
   const [showBoundary, setShowBoundary] = useState(true);
+  const [showBuildings, setShowBuildings] = useState(true);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -40,7 +42,14 @@ function App() {
   }, []);
 
   const typeMap = Object.fromEntries(
-    types.map((t) => [t.id, { displayName: t.display_name, icon: t.icon || "📍", color: t.color || "gray" }])
+    types.map((t) => [
+      t.id,
+      {
+        displayName: t.display_name,
+        icon: t.icon || "📍",
+        color: t.color || "gray",
+      },
+    ])
   );
 
   if (!session) {
@@ -50,11 +59,26 @@ function App() {
       <div className="h-screen flex flex-col">
         <Navbar />
         <div className="flex flex-1">
-          <FilterPanel filters={filters} setFilters={setFilters} types={types} search={search} setSearch={setSearch} showBoundary={showBoundary} setShowBoundary={setShowBoundary} />
+          <FilterPanel
+            filters={filters}
+            setFilters={setFilters}
+            types={types}
+            search={search}
+            setSearch={setSearch}
+            showBuildings={showBuildings}
+            setShowBuildings={setShowBuildings}
+            showBoundary={showBoundary}
+            setShowBoundary={setShowBoundary}
+          />
           <Map>
-            <EquipmentLayer filters={filters} typeMap={typeMap} search={search}/>
-            <LineLayer  filters={filters} typeMap={typeMap} search={search}/>
+            <EquipmentLayer
+              filters={filters}
+              typeMap={typeMap}
+              search={search}
+            />
+            <LineLayer filters={filters} typeMap={typeMap} search={search} />
             {showBoundary && <PropertyBoundary />}
+            {showBuildings && <BuildingsLayer />}
           </Map>
         </div>
       </div>

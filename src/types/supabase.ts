@@ -16,23 +16,44 @@ export type Database = {
     Tables: {
       attachments: {
         Row: {
+          checksum: string | null
           equipment_id: string | null
+          file_size: number | null
           file_type: string | null
           id: string
+          is_image: boolean | null
+          is_primary: boolean
+          label: string | null
+          sort_order: number | null
+          taken_at: string | null
           uploaded_at: string | null
           url: string
         }
         Insert: {
+          checksum?: string | null
           equipment_id?: string | null
+          file_size?: number | null
           file_type?: string | null
           id?: string
+          is_image?: boolean | null
+          is_primary?: boolean
+          label?: string | null
+          sort_order?: number | null
+          taken_at?: string | null
           uploaded_at?: string | null
           url: string
         }
         Update: {
+          checksum?: string | null
           equipment_id?: string | null
+          file_size?: number | null
           file_type?: string | null
           id?: string
+          is_image?: boolean | null
+          is_primary?: boolean
+          label?: string | null
+          sort_order?: number | null
+          taken_at?: string | null
           uploaded_at?: string | null
           url?: string
         }
@@ -61,7 +82,9 @@ export type Database = {
           lat: number
           lng: number
           metadata: Json | null
+          metadata_order: string[] | null
           name: string
+          summary: string | null
           type_id: number
         }
         Insert: {
@@ -71,7 +94,9 @@ export type Database = {
           lat: number
           lng: number
           metadata?: Json | null
+          metadata_order?: string[] | null
           name: string
+          summary?: string | null
           type_id: number
         }
         Update: {
@@ -81,7 +106,9 @@ export type Database = {
           lat?: number
           lng?: number
           metadata?: Json | null
+          metadata_order?: string[] | null
           name?: string
+          summary?: string | null
           type_id?: number
         }
         Relationships: [
@@ -214,20 +241,71 @@ export type Database = {
           full_name: string | null
           id: string
           phone: string | null
+          role: Database["public"]["Enums"]["user_role"]
         }
         Insert: {
           created_at?: string
           full_name?: string | null
           id: string
           phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
         }
         Update: {
           created_at?: string
           full_name?: string | null
           id?: string
           phone?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
         }
         Relationships: []
+      }
+      service_logs: {
+        Row: {
+          body: string | null
+          created_at: string
+          created_by: string | null
+          equipment_id: string
+          happened_at: string
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          equipment_id: string
+          happened_at?: string
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          equipment_id?: string
+          happened_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "service_logs_equipment_id_fkey"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipment"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "service_logs_equipment_id_fkey"
+            columns: ["equipment_id"]
+            isOneToOne: false
+            referencedRelation: "equipment_details"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       types: {
         Row: {
@@ -266,6 +344,7 @@ export type Database = {
           lines: Json | null
           lng: number | null
           metadata: Json | null
+          metadata_order: string[] | null
           name: string | null
           type_id: number | null
         }
@@ -281,10 +360,34 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      equipment_delete_metadata_key: {
+        Args: { p_equipment_id: string; p_key: string }
+        Returns: undefined
+      }
+      equipment_set_metadata_order: {
+        Args: { p_equipment_id: string; p_order: string[] }
+        Returns: undefined
+      }
+      equipment_upsert_metadata: {
+        Args: { p_equipment_id: string; p_key: string; p_value: Json }
+        Returns: undefined
+      }
+      import_equipment_geojson: {
+        Args: { g: Json }
+        Returns: {
+          inserted_id: string
+        }[]
+      }
+      import_lines_geojson: {
+        Args: { g: Json }
+        Returns: {
+          inserted_id: string
+        }[]
+      }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "user" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -411,6 +514,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["user", "admin"],
+    },
   },
 } as const
