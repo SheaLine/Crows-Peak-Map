@@ -9,7 +9,12 @@
       "Bash(npm run test:coverage:*)",
       "Bash(cat:*)",
       "Bash(npx playwright test --project=\"Mobile Safari\" -g \"should show admin features for admin users\")",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(if [ -f .npmrc ])",
+      "Bash(then cat .npmrc)",
+      "Bash(else echo \"No .npmrc file found\")",
+      "Bash(fi)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
