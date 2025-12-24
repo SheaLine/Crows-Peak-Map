@@ -46,3 +46,7 @@ TESTING.md
 #test results
 test-results/
 playwright-report/
+
+
+
+package-lock.json
