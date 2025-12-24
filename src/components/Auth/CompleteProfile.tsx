@@ -47,10 +47,37 @@ export default function CompleteProfile() {
 
     if (error) {
       setMsg("Error: " + error.message);
-    } else {
-      setMsg("Profile updated successfully!");
-      navigate("/");
+      return;
     }
+
+    // Get the current user to insert into profiles table
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setMsg("Error: User not found after update.");
+      return;
+    }
+
+    // Insert or update the user's profile in the profiles table
+    const { error: profileError } = await supabase
+      .from('profiles')
+      .upsert({
+        id: user.id,
+        full_name: displayName,
+        phone: phone,
+        role: 'user'  // Default role for new users
+      }, {
+        onConflict: 'id'
+      });
+
+    if (profileError) {
+      console.error('Profile creation error:', profileError);
+      // Show the actual error message for debugging
+      setMsg(`Profile creation failed: ${profileError.message || 'Unknown error'}. Please check RLS policies.`);
+      return;
+    }
+
+    setMsg("Profile updated successfully!");
+    navigate("/");
   };
 
   return (
